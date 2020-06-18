@@ -40,6 +40,6 @@ class ComposerScripts
 
         $dir = $event->getComposer()->getConfig()->get('vendor-dir');
 
-        rename($dir.'../wpb.php', $dir.'../hello.php');
+        rename($dir.'/../wpb.php', $dir.'/../hello.php');
     }
 }
