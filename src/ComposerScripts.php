@@ -39,8 +39,8 @@ class ComposerScripts
         require_once $event->getComposer()->getConfig()->get('vendor-dir').'/autoload.php';
 
         $dir = $event->getComposer()->getConfig()->get('vendor-dir').'/../';
-        $newName = basename($dir);
+        $root = dirname($event->getComposer()->getConfig()->get('vendor-dir'));
 
-        rename($dir.'wpb.php', $dir.$newName.'.php');
+        rename($root.'/wpb.php', $root.'/'.basename($root).'.php');
     }
 }
