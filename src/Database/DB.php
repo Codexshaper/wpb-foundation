@@ -6,38 +6,39 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 class DB extends Capsule
 {
-	protected static $instance = false;
+    protected static $instance = false;
 
-	public static function instance() {
-		if(!static::$instance) {
-			static::$instance = new self;
-		}
+    public static function instance()
+    {
+        if (!static::$instance) {
+            static::$instance = new self();
+        }
 
-		return static::$instance;
-	}
+        return static::$instance;
+    }
 
-	public function __construct() {
+    public function __construct()
+    {
+        parent::__construct();
 
-		parent::__construct();
+        global $wpdb;
 
-		global $wpdb;
+        $this->addConnection([
 
-		$this->addConnection([
+            'driver' 		    => 'mysql',
+            'host' 			     => $wpdb->dbhost,
+            'database' 		  => $wpdb->dbname,
+            'username' 		  => $wpdb->dbuser,
+            'password' 		  => $wpdb->dbpassword,
+            'prefix'   		  => $wpdb->prefix,
+            'charset'   		 => $wpdb->charset,
+            'collation'   	=> $wpdb->collate,
+        ]);
 
-		   "driver" 		=> "mysql",
-		   "host" 			=> $wpdb->dbhost,
-		   "database" 		=> $wpdb->dbname,
-		   "username" 		=> $wpdb->dbuser,
-		   "password" 		=> $wpdb->dbpassword,
-		   "prefix"   		=> $wpdb->prefix,
-		   "charset"   		=> $wpdb->charset,
-		   "collation"   	=> $wpdb->collate,
-		]);
+        //Make this Capsule instance available globally.
+        $this->setAsGlobal();
 
-		//Make this Capsule instance available globally.
-		$this->setAsGlobal();
-
-		// Setup the Eloquent ORM.
-		$this->bootEloquent();
-	}
+        // Setup the Eloquent ORM.
+        $this->bootEloquent();
+    }
 }
