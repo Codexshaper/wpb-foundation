@@ -1,24 +1,27 @@
 <?php
 
-add_shortcode('wpb-frontend', 'render_frontend');
-add_shortcode('wpb-spa', 'render_wpb_spa');
+if (function_exists('wp_enqueue_style') && function_exists('wp_enqueue_script')) {
 
-function render_frontend($atts, $content = '')
-{
-    wp_enqueue_style('wpb-frontend');
-    wp_enqueue_script('wpb-frontend');
+	if (function_exists('add_shortcode')) {
+		add_shortcode( 'wpb-frontend', 'render_frontend' );
+		add_shortcode( 'wpb-spa', 'render_wpb_spa' );
+	}
 
-    $content .= '<div id="wpb-frontend-app"></div>';
+	function render_frontend( $atts, $content = '' ) {
+	     wp_enqueue_style( 'wpb-frontend' );
+	     wp_enqueue_script( 'wpb-frontend' );
 
-    return $content;
-}
+	     $content .= '<div id="wpb-frontend-app"></div>';
 
-function render_wpb_spa($atts, $content = '')
-{
-    wp_enqueue_style('wpb-spa');
-    wp_enqueue_script('wpb-spa');
+	     return $content;
+	}
 
-    $content .= '<div id="wpb-spa-app"></div>';
+	function render_wpb_spa( $atts, $content = '' ) {
+		 wp_enqueue_style( 'wpb-spa' );
+		 wp_enqueue_script( 'wpb-spa' );
 
-    return $content;
+		 $content .= '<div id="wpb-spa-app"></div>';
+
+		 return $content;
+	}
 }
