@@ -41,6 +41,6 @@ class ComposerScripts
         $dir = $event->getComposer()->getConfig()->get('vendor-dir').'/../';
         $root = dirname($event->getComposer()->getConfig()->get('vendor-dir'));
 
-        rename($root.'/wpb.php', $root.'/'.basename($root).'.php');
+        rename($root.'/wpb-framework.php', $root.'/'.basename($root).'.php');
     }
 }
