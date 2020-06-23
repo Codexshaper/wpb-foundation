@@ -102,10 +102,10 @@ class ComposerScripts
             }
         }
 
-        $this->configApp($root, $camel_case);
+        static::configApp($root, $camel_case);
     }
 
-    protected function configApp($root, $camel_case)
+    protected static function configApp($root, $camel_case)
     {
         $file = $root.'/bootstrap/app.php';
         if(file_exists($file)) {
