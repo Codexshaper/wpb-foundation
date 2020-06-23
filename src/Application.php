@@ -158,23 +158,31 @@ class Application
 
     protected function loadRoutes($dir = null)
     {
-        if (!$dir) {
-            $dir = $this->root . 'routes/';
+        foreach ( get_option('active_plugins') as $activate_plugin) {
+            $dir = $this->root.'../'.dirname($activate_plugin);
+           if(is_dir($dir.'/routes')) {
+                foreach (glob($dir.'/routes/*.php') as $route) {
+                    require_once $route;
+                }
+            }
         }
+    //     if (!$dir) {
+    //         $dir = $this->root . 'routes/';
+    //     }
 
-        if(isset($this->app['router'])) {
+    //     if(isset($this->app['router'])) {
             
-            // $app['router']->group(['middleware' => ['web']], function(){
-            require $dir.'web.php';
-            // });
+    //         // $app['router']->group(['middleware' => ['web']], function(){
+    //         require $dir.'web.php';
+    //         // });
 
-            $this->app['router']->group(['prefix' => 'api'], function () use ($dir) {
-                require $dir.'api.php';
-            });
+    //         $this->app['router']->group(['prefix' => 'api'], function () use ($dir) {
+    //             require $dir.'api.php';
+    //         });
 
-            $this->app['router']->group(['prefix' => 'wp-admin'], function () use ($dir) {
-                require $dir.'admin.php';
-            });
-        }
-    }
+    //         $this->app['router']->group(['prefix' => 'wp-admin'], function () use ($dir) {
+    //             require $dir.'admin.php';
+    //         });
+    //     }
+    // }
 }
