@@ -41,14 +41,24 @@ class ComposerScripts
         $dir = $event->getComposer()->getConfig()->get('vendor-dir').'/../';
         $root = dirname($event->getComposer()->getConfig()->get('vendor-dir'));
 
-        $vendor_name = strtolower(basename($root));
+        $vendor_name = basename($root);
         $partials = explode('-', $vendor_name);
+        // $camel_case_partials = array_filter($partials, function($partial){
+        //     return ucfirst($partial);
+        // });
         $camel_case_partials = [];
         foreach ($partials as $partial) {
-           $camel_case_partials[] = ucfirst($partial);
+           $camel_case_partials[] = ucfirst(strtolower($partial));
+        }
+        // $snake_case_partials = array_filter($partials, function($partial){
+        //     return strtolower($partial);
+        // });
+        $snake_case_partials = [];
+        foreach ($partials as $partial) {
+            $snake_case_partials[] = strtolower($partial);
         }
         $camel_case = implode('_', $camel_case_partials);
-        $snake_case = implode('_', $partials);
+        $snake_case = implode('_', $snake_case_partials);
 
         $files = [
             '/wpb.php',
