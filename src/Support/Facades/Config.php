@@ -6,9 +6,15 @@ class Config
 {
     protected $config = [];
 
-    public function __construct()
+    public function __construct($options = [])
     {
-        foreach (glob(PLUGIN_BASE_PATH.'/../config/*.php') as $file) {
+        $dir = __DIR__ . '/../../../../../../';
+
+        if (! empty($options) && isset($options['paths']['root'])) {
+            $dir = rtrim($options['paths']['root'], "/") . '/';
+        }
+        
+        foreach (glob($dir . 'config/*.php') as $file) {
             $index = pathinfo($file)['filename'];
             $this->config[$index] = require_once $file;
         }

@@ -28,9 +28,20 @@ class Application
      */
     protected $db;
 
-    public function __construct(ContainerInterface $container = null)
+    /**
+     * @var options
+     */
+    protected $options;
+
+    /**
+     * @var root
+     */
+    protected $root;
+
+    public function __construct($options = [], ContainerInterface $container = null)
     {
-        $this->config = new Config();
+        $this->options = $options;
+        
         $this->app = $container;
 
         if (is_null($this->app)) {
@@ -41,6 +52,18 @@ class Application
 
         $this->app['app'] = $this->app;
 
+        $this->root = __DIR__ . '/../../../../';
+
+        if (! empty($this->options) && isset($this->options['paths']['root'])) {
+            $this->root = rtrim($this->options['paths']['root'], "/") . '/';
+        }
+
+        if (!isset($this->app['root'])) {
+            $this->app['root'] = $this->root;
+        }
+
+        $this->config = new Config($this->options);
+
         $this->setupEnv();
         $this->registerConfig();
         $this->setupDatabase();
@@ -48,8 +71,6 @@ class Application
         $this->registerRequest();
         $this->registerRouter();
         $this->loadRoutes();
-
-        // $app['router']->aliasMiddleware('admin', CodexShaper\App\Http\Middleware\AuthMiddleware::class);
     }
 
     public function getInstance()
@@ -82,14 +103,14 @@ class Application
         global $wpdb;
 
         $this->db = new Database([
-            'driver' 		    => 'mysql',
-            'host' 			     => $wpdb->dbhost,
-            'database' 		  => $wpdb->dbname,
-            'username' 		  => $wpdb->dbuser,
-            'password' 		  => $wpdb->dbpassword,
-            'prefix'   		  => $wpdb->prefix,
-            'charset'   		 => $wpdb->charset,
-            'collation'   	=> $wpdb->collate,
+            'driver'            => 'mysql',
+            'host'               => $wpdb->dbhost,
+            'database'        => $wpdb->dbname,
+            'username'        => $wpdb->dbuser,
+            'password'        => $wpdb->dbpassword,
+            'prefix'          => $wpdb->prefix,
+            'charset'            => $wpdb->charset,
+            'collation'     => $wpdb->collate,
         ]);
 
         $this->db->run();
@@ -103,8 +124,10 @@ class Application
     {
         $providers = $this->config->get('app.providers');
 
-        foreach ($providers as $provider) {
-            with(new $provider($this->app))->register();
+        if( $providers && count($providers) > 0) {
+            foreach ($providers as $provider) {
+                with(new $provider($this->app))->register();
+            }
         }
     }
 
@@ -127,25 +150,31 @@ class Application
 
     protected function registerRouter()
     {
-        $this->app->instance(\Illuminate\Routing\Router::class, $this->app['router']);
+        if(isset($this->app['router'])) {
+            $this->app->instance(\Illuminate\Routing\Router::class, $this->app['router']);
+        }  
         $this->app->alias('Route', \CodexShaper\WP\Support\Facades\Route::class);
     }
 
     protected function loadRoutes($dir = null)
     {
         if (!$dir) {
-            $dir = PLUGIN_BASE_PATH.'../routes/';
+            $dir = $this->root . 'routes/';
         }
-        // $app['router']->group(['middleware' => ['web']], function(){
-        require $dir.'web.php';
-        // });
 
-        $this->app['router']->group(['prefix' => 'api'], function () use ($dir) {
-            require $dir.'api.php';
-        });
+        if(isset($this->app['router'])) {
+            
+            // $app['router']->group(['middleware' => ['web']], function(){
+            require $dir.'web.php';
+            // });
 
-        $this->app['router']->group(['prefix' => 'wp-admin'], function () use ($dir) {
-            require $dir.'admin.php';
-        });
+            $this->app['router']->group(['prefix' => 'api'], function () use ($dir) {
+                require $dir.'api.php';
+            });
+
+            $this->app['router']->group(['prefix' => 'wp-admin'], function () use ($dir) {
+                require $dir.'admin.php';
+            });
+        }
     }
 }
