@@ -52,7 +52,6 @@ class ComposerScripts
 
         $files = [
             '/wpb.php',
-            '/bootstrap/app.php',
             '/includes/class-wpb-activator.php',
             '/includes/class-wpb-deactivator.php',
             '/includes/class-wpb-i18n.php',
@@ -101,6 +100,22 @@ class ComposerScripts
                 }
                 
             }
+        }
+
+        $this->configApp($root, $camel_case);
+    }
+
+    protected function configApp($root, $camel_case)
+    {
+        $file = $root.'/bootstrap/app.php';
+        if(file_exists($file)) {
+            $contents = file_get_contents($file);
+            $contents = str_replace('WPB_APP_ROOT', strtoupper($camel_case).'_APP_ROOT', $contents);
+            file_put_contents(
+                $file,
+                $contents
+            );
+            
         }
     }
 }
