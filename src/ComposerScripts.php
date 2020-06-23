@@ -43,15 +43,17 @@ class ComposerScripts
 
         $vendor_name = basename($root);
         $partials = explode('-', $vendor_name);
-        $vendor_class = implode('_', array_filter($partials, function($partial){
+        $camel_case_partials = array_filter($partials, function($partial){
             return ucfirst($partial);
-        }));
-        $snake_case = implode('_', array_filter($partials, function($partial){
+        });
+        $snake_case_partials = array_filter($partials, function($partial){
             return strtolower($partial);
-        }));
+        });
+        $camel_case = implode('_', $camel_case_partials);
+        $snake_case = implode('_', $snake_case_partials);
 
         $files = [
-            '/wpb-framework.php',
+            '/wpb.php',
             '/includes/class-wpb-framework-activator.php',
             '/includes/class-wpb-framework-deactivator.php',
             '/includes/class-wpb-framework-i18n.php',
@@ -68,22 +70,21 @@ class ComposerScripts
         ];
 
         foreach ($files as $file) {
-            if(file_exists($root.$file)) {
-                $contents = file_get_contents($root.$file);
+            $file = $root.$file;
+            if(file_exists($file)) {
+                $contents = file_get_contents($file);
                 $contents = str_replace('wpb_', $snake_case.'_', $contents);
                 $contents = str_replace('wpb', $vendor_name, $contents);
-                $contents = str_replace('WPB', $vendor_class, $contents);
-                // $contents = array_filter(explode("\n", $contents));
+                $contents = str_replace('WPB', $camel_case, $contents);
                 file_put_contents(
-                    $root.$file,
+                    $file,
                     $contents
                 );
 
-                if (file_exists($root.$file)) {
-                    $fileName = basename($file);
-                    $newFileName = str_replace('wpb', $vendor_name, $fileName);
-                    rename($root.$file, $root.'/'.$newFileName.'.php');
-                }
+                $dir = dirname($file);
+                $fileName = basename($file);
+                $newFileName = str_replace('wpb', $vendor_name, $fileName);
+                rename($file, $dir.'/'.$newFileName.'.php');
             }
         }
     }
