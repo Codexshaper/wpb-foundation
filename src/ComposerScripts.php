@@ -3,7 +3,6 @@
 namespace CodexShaper\WP;
 
 use Composer\Script\Event;
-use Illuminate\Filesystem\Filesystem;
 
 class ComposerScripts
 {
@@ -69,16 +68,15 @@ class ComposerScripts
         ];
 
         foreach ($files as $file) {
-            if(file_exists($file)) {
-                $filesystem = new Filesystem;
-                $htaccess_contents = $filesystem->get($root.$file);
-                $htaccess_contents = str_replace('wpb_', $snake_case.'_', $htaccess_contents);
-                $htaccess_contents = str_replace('wpb', $vendor_name, $htaccess_contents);
-                $htaccess_contents = str_replace('WPB', $vendor_class, $htaccess_contents);
-                // $htaccess_contents = array_filter(explode("\n", $htaccess_contents));
-                $filesystem->put(
+            if(file_exists($root.$file)) {
+                $contents = file_get_contents($root.$file);
+                $contents = str_replace('wpb_', $snake_case.'_', $contents);
+                $contents = str_replace('wpb', $vendor_name, $contents);
+                $contents = str_replace('WPB', $vendor_class, $contents);
+                // $contents = array_filter(explode("\n", $contents));
+                file_put_contents(
                     $root.$file,
-                    $htaccess_contents
+                    $contents
                 );
 
                 if (file_exists($root.$file)) {
