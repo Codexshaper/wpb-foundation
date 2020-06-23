@@ -60,9 +60,11 @@ class ComposerScripts
         $camel_case = implode('_', $camel_case_partials);
         $snake_case = implode('_', $snake_case_partials);
 
+        var_dump($camel_case);
+        var_dump($snake_case);
+
         $files = [
             '/wpb.php',
-            '/bootstrap/app.php',
             '/includes/class-wpb-framework-activator.php',
             '/includes/class-wpb-framework-deactivator.php',
             '/includes/class-wpb-framework-i18n.php',
