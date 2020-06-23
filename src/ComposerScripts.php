@@ -66,6 +66,9 @@ class ComposerScripts
             '/public/partials/wpb-public-display.php',
             '/public/css/wpb-public.css',
             '/public/js/wpb-public.js',
+            '/resources/js/admin/main.js',
+            '/resources/js/frontend/main.js',
+            '/resources/js/spa/main.js',
         ];
 
         foreach ($files as $file) {
