@@ -60,12 +60,12 @@ if (!function_exists('config')) {
 if (!function_exists('view')) {
     function view($view, $data = [], $mergeData = [])
     {
-        global $wpb;
+        global $app;
 
         if (!class_exists(\CodexShaper\Blade\View::class)) {
             throw new \Exception('View not resolved. Please install View');
         }
 
-        return (new \CodexShaper\Blade\View([], '', $wpb))->make($view, $data = [], $mergeData = []);
+        return (new \CodexShaper\Blade\View([], '', $app))->make($view, $data = [], $mergeData = []);
     }
 }
