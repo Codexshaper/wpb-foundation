@@ -59,6 +59,8 @@ class ComposerScripts
             '/includes/class-wpb-loader.php',
             '/includes/class-wpb.php',
             '/admin/class-wpb-admin.php',
+            '/admin/class-wpb-admin-menu.php',
+            '/admin/class-wpb-admin-submenu.php',
             '/admin/partials/wpb-admin-display.php',
             '/admin/css/wpb-admin.css',
             '/admin/js/wpb-admin.js',
@@ -83,6 +85,7 @@ class ComposerScripts
                 $contents = str_replace('WPB_INCLUDES', strtoupper($camel_case).'_INCLUDES', $contents);
                 $contents = str_replace('WPB_URL', strtoupper($camel_case).'_URL', $contents);
                 $contents = str_replace('WPB_ASSETS', strtoupper($camel_case).'_ASSETS', $contents);
+                $contents = str_replace('WPB_VERSION', strtoupper($camel_case).'_VERSION', $contents);
                 $contents = str_replace('WPB', $camel_case, $contents);
                 file_put_contents(
                     $file,

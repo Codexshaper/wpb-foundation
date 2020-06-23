@@ -21,6 +21,8 @@ class SubMenu
 
     public $position;
 
+    public $plugin_name;
+
     public function save()
     {
         add_action('admin_menu', [$this, 'create_submenu']);
@@ -80,9 +82,9 @@ class SubMenu
      */
     public function enqueue_scripts()
     {
-        wp_enqueue_style('wpb-vendors');
-        wp_enqueue_style('wpb-admin');
-        wp_enqueue_script('wpb-admin');
+        wp_enqueue_style($this->plugin_name . '-vendors');
+        wp_enqueue_style($this->plugin_name . '-admin');
+        wp_enqueue_script($this->plugin_name . '-admin');
     }
 
     /**
@@ -92,6 +94,6 @@ class SubMenu
      */
     public function plugin_page()
     {
-        echo '<div class="wrap"><div id="wpb-admin" csrf-token="'.csrf_token().'"></div></div>';
+        echo '<div class="wrap"><div id="'. $this->plugin_name .'-admin" csrf-token="'.csrf_token().'"></div></div>';
     }
 }
