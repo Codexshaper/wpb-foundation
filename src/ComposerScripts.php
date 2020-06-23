@@ -74,6 +74,12 @@ class ComposerScripts
                 $contents = file_get_contents($file);
                 $contents = str_replace('wpb_', $snake_case.'_', $contents);
                 $contents = str_replace('wpb', $vendor_name, $contents);
+                $contents = str_replace('WPB_APP_ROOT', strtoupper($camel_case).'_APP_ROOT', $contents);
+                $contents = str_replace('WPB_FILE', strtoupper($camel_case).'_FILE', $contents);
+                $contents = str_replace('WPB_PATH', strtoupper($camel_case).'_PATH', $contents);
+                $contents = str_replace('WPB_INCLUDES', strtoupper($camel_case).'_INCLUDES', $contents);
+                $contents = str_replace('WPB_URL', strtoupper($camel_case).'_URL', $contents);
+                $contents = str_replace('WPB_ASSETS', strtoupper($camel_case).'_ASSETS', $contents);
                 $contents = str_replace('WPB', $camel_case, $contents);
                 file_put_contents(
                     $file,
@@ -83,7 +89,10 @@ class ComposerScripts
                 $dir = dirname($file);
                 $fileName = basename($file);
                 $newFileName = str_replace('wpb', $vendor_name, $fileName);
-                rename($file, $dir.'/'.$newFileName.'.php');
+                if($fileName != $newFileName) {
+                    rename($file, $dir.'/'.$newFileName.'.php');
+                }
+                
             }
         }
     }
