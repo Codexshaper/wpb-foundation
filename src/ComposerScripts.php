@@ -3,6 +3,7 @@
 namespace CodexShaper\WP;
 
 use Composer\Script\Event;
+use Illuminate\Filesystem\Filesystem;
 
 class ComposerScripts
 {
@@ -41,8 +42,51 @@ class ComposerScripts
         $dir = $event->getComposer()->getConfig()->get('vendor-dir').'/../';
         $root = dirname($event->getComposer()->getConfig()->get('vendor-dir'));
 
-        if (file_exists($root.'/wpb-framework.php')) {
-            rename($root.'/wpb-framework.php', $root.'/'.basename($root).'.php');
+        $vendor_name = basename($root);
+        $partials = explode('-', $vendor_name);
+        $vendor_class = implode('_', array_filter($partials, function($partial){
+            return ucfirst($partial);
+        }));
+        $snake_case = implode('_', array_filter($partials, function($partial){
+            return strtolower($partial);
+        }));
+
+        $files = [
+            '/wpb-framework.php',
+            '/includes/class-wpb-framework-activator.php',
+            '/includes/class-wpb-framework-deactivator.php',
+            '/includes/class-wpb-framework-i18n.php',
+            '/includes/class-wpb-framework-loader.php',
+            '/includes/class-wpb-framework.php',
+            '/admin/class-wpb-framework-admin.php',
+            '/admin/partials/wpb-framework-admin-display.php',
+            '/admin/css/wpb-framework-admin.css',
+            '/admin/js/wpb-framework-admin.js',
+            '/public/class-wpb-framework-public.php',
+            '/public/partials/wpb-framework-public-display.php',
+            '/public/css/wpb-framework-public.css',
+            '/public/js/wpb-framework-public.js',
+        ];
+
+        foreach ($files as $file) {
+            if(file_exists($file)) {
+                $filesystem = new Filesystem;
+                $htaccess_contents = $filesystem->get($root.$file);
+                $htaccess_contents = str_replace('wpb_', $snake_case.'_', $htaccess_contents);
+                $htaccess_contents = str_replace('wpb', $vendor_name, $htaccess_contents);
+                $htaccess_contents = str_replace('WPB', $vendor_class, $htaccess_contents);
+                // $htaccess_contents = array_filter(explode("\n", $htaccess_contents));
+                $filesystem->put(
+                    $root.$file,
+                    $htaccess_contents
+                );
+
+                if (file_exists($root.$file)) {
+                    $fileName = basename($file);
+                    $newFileName = str_replace('wpb', $vendor_name, $fileName);
+                    rename($root.$file, $root.'/'.$newFileName.'.php');
+                }
+            }
         }
     }
 }
