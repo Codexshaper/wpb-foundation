@@ -41,43 +41,31 @@ class ComposerScripts
         $dir = $event->getComposer()->getConfig()->get('vendor-dir').'/../';
         $root = dirname($event->getComposer()->getConfig()->get('vendor-dir'));
 
-        $vendor_name = basename($root);
+        $vendor_name = strtolower(basename($root));
         $partials = explode('-', $vendor_name);
-        // $camel_case_partials = array_filter($partials, function($partial){
-        //     return ucfirst($partial);
-        // });
         $camel_case_partials = [];
         foreach ($partials as $partial) {
            $camel_case_partials[] = ucfirst(strtolower($partial));
         }
-        // $snake_case_partials = array_filter($partials, function($partial){
-        //     return strtolower($partial);
-        // });
-        $snake_case_partials = [];
-        foreach ($partials as $partial) {
-            $snake_case_partials[] = strtolower($partial);
-        }
         $camel_case = implode('_', $camel_case_partials);
-        $snake_case = implode('_', $snake_case_partials);
-
-        var_dump($camel_case);
-        var_dump($snake_case);
+        $snake_case = implode('_', $partials);
 
         $files = [
             '/wpb.php',
-            '/includes/class-wpb-framework-activator.php',
-            '/includes/class-wpb-framework-deactivator.php',
-            '/includes/class-wpb-framework-i18n.php',
-            '/includes/class-wpb-framework-loader.php',
-            '/includes/class-wpb-framework.php',
-            '/admin/class-wpb-framework-admin.php',
-            '/admin/partials/wpb-framework-admin-display.php',
-            '/admin/css/wpb-framework-admin.css',
-            '/admin/js/wpb-framework-admin.js',
-            '/public/class-wpb-framework-public.php',
-            '/public/partials/wpb-framework-public-display.php',
-            '/public/css/wpb-framework-public.css',
-            '/public/js/wpb-framework-public.js',
+            '/bootstrap/app.php',
+            '/includes/class-wpb-activator.php',
+            '/includes/class-wpb-deactivator.php',
+            '/includes/class-wpb-i18n.php',
+            '/includes/class-wpb-loader.php',
+            '/includes/class-wpb.php',
+            '/admin/class-wpb-admin.php',
+            '/admin/partials/wpb-admin-display.php',
+            '/admin/css/wpb-admin.css',
+            '/admin/js/wpb-admin.js',
+            '/public/class-wpb-public.php',
+            '/public/partials/wpb-public-display.php',
+            '/public/css/wpb-public.css',
+            '/public/js/wpb-public.js',
         ];
 
         foreach ($files as $file) {
