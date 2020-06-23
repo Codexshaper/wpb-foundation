@@ -90,7 +90,7 @@ class ComposerScripts
                 $fileName = basename($file);
                 $newFileName = str_replace('wpb', $vendor_name, $fileName);
                 if($fileName != $newFileName) {
-                    rename($file, $dir.'/'.$newFileName.'.php');
+                    rename($file, $dir.'/'.$newFileName);
                 }
                 
             }
