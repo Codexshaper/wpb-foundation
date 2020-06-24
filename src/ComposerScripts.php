@@ -3,6 +3,7 @@
 namespace CodexShaper\WP;
 
 use Composer\Script\Event;
+use Symfony\Component\Process\Process;
 
 class ComposerScripts
 {
@@ -145,7 +146,19 @@ class ComposerScripts
                 $file,
                 $contents
             );
-            
+        }
+
+        require_once $root.'/vendor/autoload.php';
+
+        try {
+            $process = \Symfony\Component\Process\Process::fromShellCommandline('composer dump-autoload -o');
+            $process->setEnv([
+                'COMPOSER_HOME' => $root.'/vendor/bin/composer',
+            ]);
+            $process->setTimeout(null); // Setting timeout to null to prevent installation from stopping at a certain point in time
+            $process->setWorkingDirectory(__DIR__)->mustRun();
+        } catch (\Exception $ex) {
+            echo $ex->getMessage();
         }
     }
 }
