@@ -184,5 +184,5 @@ class Application
     //             require $dir.'admin.php';
     //         });
     //     }
-    // }
+    }
 }

@@ -52,6 +52,7 @@ class ComposerScripts
 
         $files = [
             '/wpb.php',
+            '/bootstrap/app.php',
             '/includes/class-wpb-activator.php',
             '/includes/class-wpb-deactivator.php',
             '/includes/class-wpb-i18n.php',
@@ -70,6 +71,20 @@ class ComposerScripts
             '/resources/js/admin/main.js',
             '/resources/js/frontend/main.js',
             '/resources/js/spa/main.js',
+            '/src/Application.php',
+            '/src/helpers.php',
+            '/src/Support/Facades/Config.php',
+            '/src/Support/Facades/Route.php',
+            '/src/Http/Kernel.php',
+            '/src/Http/Events/RequestHandler.php',
+            '/src/Exceptions/Handler.php',
+            '/app/User.php',
+            '/app/Post.php',
+            '/app/Http/Controllers/ProductController.php',
+            '/app/Http/Middleware/AuthMiddleware.php',
+            '/app/Http/Middleware/VerifyCsrfToken.php',
+            '/app/Http/Kernel.php',
+            '/app/Exceptions/Handler.php',
         ];
 
         foreach ($files as $file) {
@@ -102,7 +117,8 @@ class ComposerScripts
             }
         }
 
-        static::configApp($root, $camel_case);
+        // static::configApp($root, $camel_case);
+        static::updateComposer($root, $camel_case);
     }
 
     protected static function configApp($root, $camel_case)
@@ -111,6 +127,20 @@ class ComposerScripts
         if(file_exists($file)) {
             $contents = file_get_contents($file);
             $contents = str_replace('WPB_APP_ROOT', strtoupper($camel_case).'_APP_ROOT', $contents);
+            file_put_contents(
+                $file,
+                $contents
+            );
+            
+        }
+    }
+
+    protected static function updateComposer($root, $camel_case)
+    {
+        $file = $root.'/composer.json';
+        if(file_exists($file)) {
+            $contents = file_get_contents($file);
+            $contents = str_replace('WPB', strtoupper($camel_case), $contents);
             file_put_contents(
                 $file,
                 $contents
