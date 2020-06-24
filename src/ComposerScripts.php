@@ -140,7 +140,7 @@ class ComposerScripts
         $file = $root.'/composer.json';
         if(file_exists($file)) {
             $contents = file_get_contents($file);
-            $contents = str_replace('WPB', strtoupper($camel_case), $contents);
+            $contents = str_replace('WPB', $camel_case, $contents);
             file_put_contents(
                 $file,
                 $contents
