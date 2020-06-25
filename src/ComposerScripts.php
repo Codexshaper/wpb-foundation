@@ -148,10 +148,15 @@ class ComposerScripts
             );
         }
 
+        if(! file_exists($root.'/vendor/autoload.php')) {
+            echo "Please install composer first.";
+        }
+
         require_once $root.'/vendor/autoload.php';
 
         try {
-            $process = \Symfony\Component\Process\Process::fromShellCommandline('composer dump-autoload -o');
+            var_dump(class_exists(Process::class));
+            $process = Process::fromShellCommandline('composer dump-autoload -o');
             $process->setEnv([
                 'COMPOSER_HOME' => $root.'/vendor/bin/composer',
             ]);
