@@ -161,7 +161,7 @@ class ComposerScripts
                 'COMPOSER_HOME' => $root.'/vendor/bin/composer',
             ]);
             $process->setTimeout(null); // Setting timeout to null to prevent installation from stopping at a certain point in time
-            $process->setWorkingDirectory(__DIR__)->mustRun();
+            $process->setWorkingDirectory($root)->mustRun();
         } catch (\Exception $ex) {
             echo $ex->getMessage();
         }
