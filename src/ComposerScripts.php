@@ -147,23 +147,5 @@ class ComposerScripts
                 $contents
             );
         }
-
-        if(! file_exists($root.'/vendor/autoload.php')) {
-            echo "Please install composer first.";
-        }
-
-        require_once $root.'/vendor/autoload.php';
-
-        try {
-            var_dump(class_exists(Process::class));
-            $process = Process::fromShellCommandline('composer dump-autoload -o');
-            $process->setEnv([
-                'COMPOSER_HOME' => $root.'/vendor/bin/composer',
-            ]);
-            $process->setTimeout(null); // Setting timeout to null to prevent installation from stopping at a certain point in time
-            $process->setWorkingDirectory($root)->mustRun();
-        } catch (\Exception $ex) {
-            echo $ex->getMessage();
-        }
     }
 }
